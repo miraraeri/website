@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        {{form.hidden_tag()}}
+        {{form.name.label}}
+        {{form.name(type="text")}}
+        {% for error in form.name.errors%}
+            {{error}}
+        {% endfor %}
+        <label>Создатель: {{nusername}}</label>
+        {{form.genre.label}}
+        {% for gen in form.genre %}
+            <div> {{gen()}} {{gen.label.text}}</div>
+        {% endfor %}
+        {{form.age_limit.label}}
+        {{form.age_limit()}}
+        {{form.desc.label}}
+        {{form.desc()}}
+        {{form.submit(type="submit")}}
+        {% if message%}
+            {{message}}
+        {% endif %}
+    </form>
+{% endblock %}

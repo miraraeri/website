@@ -1,7 +1,7 @@
 {% extends "form_base.html"%}
 
 {% block content %}
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {{form.hidden_tag()}}
     <h1>Регистрация</h1>
     <p>
@@ -51,9 +51,9 @@
     </p>
     <p>
         {{form.avatar.label}}<br>
-        {{form.avatar(class="form-control", type="file")}}<br>
-        {% for error in form.username.errors %}
-        <p class="alert alert-danger" role="alert">
+        {{form.avatar(type="file", accept=".png,.jpeg,.jpg")}}<br>
+        {% for error in form.avatar.errors %}
+        <p>
             {{error}}
         </p>
         {% endfor %}

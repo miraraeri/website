@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <label>{{name}}</label>
+    <label>Создатель: {{creator}}</label>
+    <label>Жанр: </label>
+    {% for gen in genres%}
+        {{gen}}
+    {% endfor %}
+    <label>Ограничение:{{age_limit}}</label>
+    <label>Описание:</label>
+    <p>{{desc}}</p>
+    {% if user %}
+    <a href="/download/{{novel_id}}">Скачать новеллу</a>
+    {% endif %}
+    {% if user_id == novel_user_id %}
+    <a href="/edit_novel/{{novel_id}}">Изменить новеллу</a>
+    <a href="/del_novel/{{novel_id}}">Удалить новеллу</a>
+    {% endif %}
+{% endblock %}

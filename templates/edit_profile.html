@@ -1,7 +1,7 @@
 {% extends "form_base.html"%}
 
 {% block content %}
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {{form.hidden_tag()}}
     <h1>Редактирование профиля</h1>
     <p>
@@ -42,14 +42,14 @@
     </p>
     <p>
         {{form.avatar.label}}<br>
-        {{form.avatar(class="form-control", type="file")}}<br>
+        {{form.avatar(type="file", accept=".png,.jpg,.jpeg")}}<br>
         {% for error in form.avatar.errors %}
         <p class="alert alert-danger" role="alert">
             {{error}}
         </p>
         {% endfor %}
     </p>
-    <p>{{form.submit(type="submit", class="btn btn-primary", value="Сохранить")}}</p>
+    <p>{{form.submit(type="submit", value="Сохранить")}}</p>
     {% if message %}
         <p>{{message}}</p>
     {% endif %}

@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{title}}</title>
-</head>
-<body>
-    <form method="get">
+{% extends "form_base.html" %}
+{% block content %}
+    <form method="post">
+        <a href="/main_page">⬅️</a>
+        <img src="{{avatar}}" alt="Аватарка">
         <label>Псевдоним: {{username}}</label><br>
         <label>Дата рождения: {{birth_date}}</label><br>
         <label>Дата регистрации: {{modified_date}}</label><br>
         <a href="/edit_profile">Изменить</a>
-        <form>
-            <input type="submit" value="Удалить">
-        </form>
+        <a href="/del_profile">Удалить аккаунт</a>
+        <input type="submit" value="Выйти из аккаунта">
     </form>
-</body>
-</html>
+{% endblock %}

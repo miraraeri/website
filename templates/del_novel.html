@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        <h1>Вы уверены, что хотите удалить новеллу {{novel_name}}?</h1>
+        <input type="submit" value="Да">
+        <a href="/novel_profile/{{novel_id}}">Нет</a>
+    </form>
+{% endblock %}
