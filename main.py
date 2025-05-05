@@ -8,6 +8,7 @@ from data.genres import Genre
 from data.novels import Novel
 from data.novels_genres import NovelGenre
 from data.age_limits import AgeLimit
+from data.novels_pics import NovelsPics
 from forms.register import RegisterForm
 from forms.login import LoginForm
 from forms.create_novel import CreateNovel
@@ -34,7 +35,6 @@ def register():
                                    form=form, message="Такой пользователь уже есть")
         f = request.files.get('avatar')
         if f.content_type not in ['image/jpeg', 'image/png']:
-            print('NOOOOOOOOOOOOO')
             return render_template('register.html', title='Регистрация', form=form, message="Неверный формат")
         ava_path = os.path.join('static/user_avatars', f.filename)
         f.save(ava_path)
@@ -174,25 +174,57 @@ def create_novel():
             return redirect(request.url)
         novel_path = os.path.join('static/novel_archive', f.filename)
         novel_path = novel_path.replace('\\', '/')
-        print(novel_path)
+
+        novel_ava = request.files['novel_avatar']
+        if novel_ava.content_type not in ['image/jpeg', 'image/png']:
+            return render_template('create_novel.html', title='Создать новеллу', form=form,
+                                   genres=genres_list, age_limits=ages_list)
+        novel_ava_path = os.path.join('static/novel_avatars', novel_ava.filename)
+        novel_ava_path = novel_ava_path.replace('\\', '/')
+
+        novel_pics = form.novel_pics.data
+        pics_paths = []
+        for pic in novel_pics:
+            if pic.content_type not in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/x-msvideo', 'video/quicktime', 'video/x-matroska']:
+                return render_template('create_novel.html', title='Создать новеллу', form=form,
+                                       genres=genres_list, age_limits=ages_list)
+            pic_path = os.path.join('static/novel_pics', pic.filename)
+            pic_path = pic_path.replace('\\', '/')
+            pics_paths.append(pic_path)
+
         novel = Novel(
             name=form.name.data,
             description=form.desc.data,
             creation_date=form.creation_date.data,
-            archive_url=novel_path
+            archive_url=novel_path,
+            novel_avatar=novel_ava_path
         )
-
+        db_sess.add(novel)
+        db_sess.flush()
         if not request.form.getlist('genre'):
+            db_sess.rollback()
             return render_template('create_novel.html', title='Создать новеллу', form=form,
                                    genres=genres_list, age_limits=ages_list, message='Добавьте жанры')
 
         for genre in request.form.getlist('genre'):
+            print(genre)
             n_genre = db_sess.query(Genre).filter_by(name=genre).first()
             novel_genre = NovelGenre(novel_id=novel.id, genre_id=n_genre.id)
             db_sess.add(novel_genre)
         user.novels.append(novel)
         age_limit_id.novels.append(novel)
+
+        for path in pics_paths:
+            novels_pics = NovelsPics(
+                pic_path=path,
+                novel=novel
+            )
+            db_sess.add(novels_pics)
+
         f.save(novel_path)
+        novel_ava.save(novel_ava_path)
+        for i in range(len(pics_paths)):
+            novel_pics[i].save(pics_paths[i])
         db_sess.commit()
         return redirect('/')
     return render_template('create_novel.html', title='Создать новеллу', form=form,
@@ -207,6 +239,12 @@ def novel_profile(id_novel):
         return redirect('/')
     novel_genres = db_sess.query(NovelGenre).filter_by(novel_id=id_novel).all()
     genres = [g.genre.name for g in novel_genres]
+    novel_pics = db_sess.query(NovelsPics).filter_by(novel_id=id_novel).all()
+    pics = []
+    for pic in novel_pics:
+        clean_pic = pic.pic_path.replace('\\', '/').replace('static', '')
+        pics.append(url_for('static', filename=clean_pic))
+    clean_novel_ava = novel.novel_avatar.replace('\\', '/').replace('static', '')
     param = {
         'title': "Прекрасная новелла",
         'name': novel.name,
@@ -215,7 +253,9 @@ def novel_profile(id_novel):
         'age_limit': novel.age_limit.name,
         'desc': novel.description,
         'novel_id': novel.id,
-        'novel_user_id': novel.user_id
+        'novel_user_id': novel.user_id,
+        'novel_ava': url_for('static', filename=clean_novel_ava),
+        'pics': pics
     }
     if 'user_id' in session:
         user = db_sess.query(User).filter_by(id=session['user_id']).first()
@@ -266,6 +306,34 @@ def edit_novel(id_novel):
         novel.name = form.name.data
         novel.age_limit_id = form.age_limit.data
         novel.description = form.desc.data
+        f = request.files['novel_arch']
+        if f and f.content_type in ['application/x-compressed', 'application/zip', 'application/x-zip-compressed', 'application/x-rar-compressed', 'application/x-7z-compressed']:
+            clean_arch_path = os.path.join('static/novel_archive', f.filename)
+            clean_arch_path = clean_arch_path.replace('\\', '/')
+            f.save(clean_arch_path)
+            novel.archive_url = clean_arch_path
+
+        novel_ava = request.files['novel_ava']
+        if novel_ava and novel_ava.content_type in ['image/jpeg', 'image/png']:
+            clean_ava_path = os.path.join('static/novel_avatars', novel_ava.filename)
+            clean_ava_path = clean_ava_path.replace('\\', '/')
+            novel_ava.save(clean_ava_path)
+            novel.novel_avatar = clean_ava_path
+
+        novel_pics = form.novel_pics.data
+        if form.del_old_scr:
+            db_sess.query(NovelsPics).filter(NovelsPics.novel_id == id_novel).delete()
+        for pic in novel_pics:
+            if pic.content_type in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/x-msvideo', 'video/quicktime', 'video/x-matroska']:
+                pic_path = os.path.join('static/novel_pics', pic.filename)
+                pic_path = pic_path.replace('\\', '/')
+                pic.save(pic_path)
+                n_pics = NovelsPics(
+                    pic_path=pic_path,
+                    novel=novel
+                )
+                db_sess.add(n_pics)
+
         db_sess.query(NovelGenre).filter(NovelGenre.novel_id == id_novel).delete()
         for genre_id in form.genre.data:
             novel.novels_genres.append(NovelGenre(novel_id=id_novel, genre_id=genre_id))
@@ -286,6 +354,7 @@ def del_novel(id_novel):
         return redirect('/')
     if request.method == 'POST':
         db_sess.query(NovelGenre).filter(NovelGenre.novel_id == id_novel).delete()
+        db_sess.query(NovelsPics).filter(NovelsPics.novel_id == id_novel).delete()
         db_sess.query(Novel).filter(Novel.id == id_novel).delete()
         db_sess.commit()
         return redirect('/')

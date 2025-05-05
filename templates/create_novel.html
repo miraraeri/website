@@ -55,6 +55,20 @@
             {% endfor %}
         </p>
         <p>
+            {{form.novel_avatar.label}}
+            {{form.novel_avatar(type="file", accept=".jpg,.png,.jpeg")}}
+            {% for error in form.novel_avatar.errors %}
+                {{error}}
+            {% endfor %}
+        </p>
+        <p>
+            {{form.novel_pics.label}}
+            {{form.novel_pics(multiple=True, accept="image/*,video/*")}}
+            {% for error in form.novel_pics.errors %}
+                {{error}}
+            {% endfor %}
+        </p>
+        <p>
             {{form.submit(type="submit", value='Создать')}}
         </p>
         {% if message %}

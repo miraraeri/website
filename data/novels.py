@@ -17,3 +17,5 @@ class Novel(SqlAlchemyBase):
     age_limit_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("age_limits.id"))
     age_limit = orm.relationship('AgeLimit')
     novels_genres = orm.relationship('NovelGenre', back_populates='novel')
+    novel_avatar = sqlalchemy.Column(sqlalchemy.String)
+    novels_pics = orm.relationship('NovelsPics', back_populates='novel')

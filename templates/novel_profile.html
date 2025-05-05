@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <img src="{{novel_ava}}" alt="Обложка новеллы">
     <label>{{name}}</label>
     <label>Создатель: {{creator}}</label>
     <label>Жанр: </label>
@@ -10,6 +11,9 @@
     <label>Ограничение:{{age_limit}}</label>
     <label>Описание:</label>
     <p>{{desc}}</p>
+    {% for pic in pics%}
+        <img src="{{pic}}" alt="Сриншоты новеллы">
+    {% endfor %}
     {% if user %}
     <a href="/download/{{novel_id}}">Скачать новеллу</a>
     {% endif %}

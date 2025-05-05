@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {{form.hidden_tag()}}
         {{form.name.label}}
         {{form.name(type="text")}}
@@ -17,6 +17,30 @@
         {{form.age_limit()}}
         {{form.desc.label}}
         {{form.desc()}}
+
+        {{form.novel_arch.label}}
+        {{form.novel_arch(type="file", accept=".zip,.rar,.7z")}}
+        {% for error in form.novel_arch.errors %}
+        {{error}}
+        {% endfor %}
+
+        {{form.novel_ava.label}}
+        {{form.novel_ava(type="file", accept=".jpg,.png,.jpeg")}}
+        {% for error in form.novel_ava.errors %}
+        {{error}}
+        {% endfor %}
+
+        {{form.novel_pics.label}}
+        {{form.novel_pics(multiple=True, accept="image/*,video/*")}}
+        {% for error in form.novel_pics.errors %}
+        {{error}}
+        {% endfor %}
+
+        <p>{{form.del_old_scr()}} {{form.del_old_scr.label}}</p>
+
+<!--        <input type="checkbox" name="del_old_scr">-->
+<!--        <label for="del_old_scr">Удалить старые скриншоты</label>-->
+
         {{form.submit(type="submit")}}
         {% if message%}
             {{message}}

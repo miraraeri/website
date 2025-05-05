@@ -3,3 +3,4 @@ from . import genres
 from . import age_limits
 from . import novels
 from . import novels_genres
+from . import novels_pics
