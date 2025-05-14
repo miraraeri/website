@@ -1,31 +1,34 @@
 {% extends "form_base.html" %}
 {% block content %}
-<form action="" method="post">
-    <h1>Авторизация</h1>
+<form class="parent" action="" method="post" style="text-align: center;">
+    <div style="text-align: left;">
+        <a style="text-align:center;" class="custom-file-label" href="/main_page">Возвращение в мир<br> приключений</a>
+    </div>
+    <h1>~Авторизация~</h1>
     {{form.hidden_tag()}}
-    <p>
-        {{form.email.label}}
-        {{form.email(class="form-control", type="email")}}
+    <div class="child">
+        {{form.email.label}}<br>
+        {{form.email(class="text_field", type="email", placeholder="yesmaster@yandex.ru")}}
         {% for error in form.email.errors%}
-            <p class="alert alert-danger" role="alert">
+            <div>
                 {{error}}
-            </p>
+            </div>
         {% endfor %}
-    </p>
-    <p>
-        {{form.password.label}}
-        {{form.password(class="form-control", type="password")}}
+    </div>
+    <div class="child">
+        {{form.password.label}}<br>
+        {{form.password(class="text_field", type="password", placeholder="1234? Надеемся, что нет)")}}
         {% for error in form.password.errors%}
-            <p class="alert alert-danger" role="alert">
+            <div>
                 {{error}}
-            </p>
+            </div>
         {% endfor %}
-    </p>
-    <p>{{form.remember_me()}} {{form.remember_me.label}}</p>
-    <p>{{form.submit(type="submit", class="btn btn-primary")}}</p>
-    <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь!</a></p>
+    </div>
+    <div class="child">{{form.remember_me(class="checkbox")}} {{form.remember_me.label}}</div>
+    <div class="child">{{form.submit(type="submit", class="button")}}</div>
+    <p>Ещё нет аккаунта? <a style="color: #A2DB9E;" href="/register">Будем рады вашему аккаунту!</a></p>
     {% if message %}
-        <p>{{message}}</p>
+        <div>{{message}}</div>
     {% endif %}
 </form>
 {% endblock %}

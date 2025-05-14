@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if query %}
+    <p>Результаты поиска для: <em>{{query}}</em></p>
+    {% endif %}
+    <div class="container">
     {% for item in novels %}
-    <div>
-        <a href="/novel_profile/{{item.id}}"><h2>{{item.name}}</h2></a>
+    <div class="box">
+        <center>
+        <a href="/novel_profile/{{item.id}}"><img class="image" src="{{item.novel_avatar}}" alt="Обложка новеллы"></a>
+        </center>
+        <a href="/novel_profile/{{item.id}}" style="color:#A2DB9E;text-decoration:none;"><h2>{{item.name}}</h2></a>
         <p>{{item.description}}</p>
     </div>
     {% endfor %}
+    </div>
 {% endblock %}

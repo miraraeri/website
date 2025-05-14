@@ -4,11 +4,11 @@ from wtforms.fields import StringField, DateField, EmailField, PasswordField, Fi
 
 
 class EditUserForm(FlaskForm):
-    username = StringField('Псевдоним')
+    username = StringField('Новый псевдоним такой же неповторимый')
     birth_date = DateField()
-    email = EmailField('Почта')
-    password = PasswordField('Пароль')
-    avatar = FileField('Загрузите файл',
+    email = EmailField('Новая почта - новая жизнь')
+    password = PasswordField('Новый пароль - это прекрасно. Оставьте поле пустым, если не хотите изменений')
+    avatar = FileField('Новая аватарка будет так же любима',
                        validators=[FileAllowed(['png', 'jpg', 'jpeg'],
-                                               'Только форматы .png, .jpg, .jpeg')])
-    submit = SubmitField('Сохранить')
+                                               'Всё также поддерживаем только форматы .png, .jpg, .jpeg')])
+    submit = SubmitField('Сохранение изменений')

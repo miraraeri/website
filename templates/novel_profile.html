@@ -1,24 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <img src="{{novel_ava}}" alt="Обложка новеллы">
-    <label>{{name}}</label>
-    <label>Создатель: {{creator}}</label>
-    <label>Жанр: </label>
-    {% for gen in genres%}
-        {{gen}}
-    {% endfor %}
-    <label>Ограничение:{{age_limit}}</label>
-    <label>Описание:</label>
-    <p>{{desc}}</p>
-    {% for pic in pics%}
-        <img src="{{pic}}" alt="Сриншоты новеллы">
-    {% endfor %}
-    {% if user %}
-    <a href="/download/{{novel_id}}">Скачать новеллу</a>
-    {% endif %}
-    {% if user_id == novel_user_id %}
-    <a href="/edit_novel/{{novel_id}}">Изменить новеллу</a>
-    <a href="/del_novel/{{novel_id}}">Удалить новеллу</a>
-    {% endif %}
+    <div class="profile_div">
+        <div class="con_cov_txt">
+            <div class="ch_cov_txt">
+                <img class="cover" src="{{novel_ava}}" alt="Обложка новеллы">
+            </div>
+            <div class="ch_cov_txt">
+                <label style="font-size:40px;">{{name}}</label><br>
+                <label>Создатель сей новеллы: {{creator}}</label><br>
+                <label>Жанр прекрасной новеллы: </label>
+                {% for gen in genres%}
+                    {{gen}}
+                {% endfor %}<br>
+                <label>Возрастное ограничение:{{age_limit}}</label><br>
+            </div>
+        </div>
+        <p>{{desc}}</p><br>
+        {% if pics %}
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                {% for pic in pics%}
+                <div class="swiper-slide">
+                    <img class="profile_img" src="{{pic}}" alt="Сриншоты новеллы"><br>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+        {% endif %}
+
+        {% if user %}
+        <br><a class="button" href="/download/{{novel_id}}">Скачать новеллу</a><br>
+        {% endif %}
+        {% if user_id == novel_user_id %}
+        <a class="button" href="/edit_novel/{{novel_id}}">Пора изменений</a>
+        <a class="button" href="/del_novel/{{novel_id}}">Пора удалений</a>
+        {% endif %}
+    </div>
 {% endblock %}

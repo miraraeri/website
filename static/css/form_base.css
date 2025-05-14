@@ -1,12 +1,116 @@
 form{
     border-radius: 10px;
     font-family: "Kelly Slab", sans-serif;
-    margin-top: 50px;
-    margin-left: 315px;
-    margin-right: 315px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
     padding: 30px;
     background-color: white;
 }
 h1{
+    text-align: center;
     font-family: "Kelly Slab", sans-serif;
+    color: #263f24;
+    font-size: 48px;
+}
+.parent{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.child{
+    padding: 10px;
+}
+.text_field{
+    background-color: #A2DB9E;
+    border-radius: 10px;
+    height: 60px;
+    width: 420px;
+    font-size: 20px;
+    text-align: left;
+    color: #263f24;
+    margin: 5px;
+}
+.text_area{
+    background-color: #A2DB9E;
+    border-radius: 10px;
+    height: 100px;
+    width: 420px;
+    font-size: 15px;
+    text-align: left;
+    color: #263f24;
+    margin: 5px;
+}
+.checkbox{
+    width: 20px;
+    height: 20px;
+}
+label{
+font-size: 32px;
+text-align: center;
+color: #000;
+}
+p{
+font-size: 20px;
+text-align: center;
+color: #263f24;
+}
+input::placeholder{
+    color: #263f24;
+}
+.text_area::placeholder{
+    color: #263f24;
+}
+.button{
+    background-color: #A2DB9E;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 10px;
+    color: #263f24;
+    padding: 10px 30px;
+}
+
+.hidden-file {
+    display: none;
+}
+
+.custom-file-label {
+    display: inline-block;
+    background-color: #A2DB9E;
+    color: #263f24;
+    padding: 10px 30px;
+    border: 1px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-family: "Kelly Slab", sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    border-width: 2px;
+    border-style: solid;
+    border-color:#263f24;
+}
+select{
+    background-color: #A2DB9E;
+    border-radius: 10px;
+    font-size: 20px;
+    font-family: "Kelly Slab", sans-serif;
+    padding: 10px 10px;
+}
+.both{
+    display: flex;
+    flex-direction:row;
+    padding: 20px;
+}
+.both_ch{
+padding:10px;
+}
+.profile_uav{
+    max-width: 300px:
+    width: auto;
+    max-height: 169px;
+    height: auto;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color:#263f24;
 }

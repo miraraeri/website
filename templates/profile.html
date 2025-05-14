@@ -1,13 +1,25 @@
 {% extends "form_base.html" %}
 {% block content %}
-    <form method="post">
-        <a href="/main_page">⬅️</a>
-        <img src="{{avatar}}" alt="Аватарка">
-        <label>Псевдоним: {{username}}</label><br>
-        <label>Дата рождения: {{birth_date}}</label><br>
-        <label>Дата регистрации: {{modified_date}}</label><br>
-        <a href="/edit_profile">Изменить</a>
-        <a href="/del_profile">Удалить аккаунт</a>
-        <input type="submit" value="Выйти из аккаунта">
+    <form method="post" class="parent">
+        <div>
+        <a style="text-align:center;" class="custom-file-label" href="/main_page">Возвращение в мир<br> приключений</a>
+        </div>
+        <div class="both">
+        <div class="both_ch">
+            <img class="profile_uav" src="{{avatar}}" alt="Аватарка">
+        </div>
+        <div class="both_ch">
+            <label>Ваш псевдоним: {{username}}</label><br>
+            <label>Ваша дата рождения: {{birth_date}}</label><br>
+            <label>Ваша дата регистрации: {{modified_date}}</label>
+        </div>
+        </div>
+        <div class="child" style="text-align:center;">
+        <a class="custom-file-label" href="/edit_profile">Время перемен</a>
+        <a class="custom-file-label" href="/del_profile">Время прощаний</a>
+        </div>
+        <div class="child" style="text-align:right;">
+        <input class="button" type="submit" value="Выход из аккаунта">
+        </div>
     </form>
 {% endblock %}

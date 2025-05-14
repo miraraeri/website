@@ -5,13 +5,13 @@ from wtforms.validators import DataRequired
 
 
 class RegisterForm(FlaskForm):
-    username = StringField('Псевдоним', validators=[DataRequired()])
+    username = StringField('Придумайте неповторимый псевдоним', validators=[DataRequired()])
     birth_date = DateField()
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
-    avatar = FileField('Загрузите фото', validators=[
-        # FileRequired(),
-        FileAllowed(['png', 'jpg', 'jpeg'], 'Только форматы .png, .jpg, .jpeg')
+    email = EmailField('Введите лучшую почту', validators=[DataRequired()])
+    password = PasswordField('Придумайте оригинальный пароль', validators=[DataRequired()])
+    password_again = PasswordField('Не забудьте его повторить', validators=[DataRequired()])
+    avatar = FileField('Загрузите любимую аватарку', validators=[
+        FileRequired(),
+        FileAllowed(['png', 'jpg', 'jpeg'], 'Поддерживаем только форматы .png, .jpg, .jpeg')
     ])
-    submit = SubmitField('Зарегистрироваться')
+    submit = SubmitField('Час регистрации настал')

@@ -1,47 +1,63 @@
-{% extends "base.html" %}
+{% extends "form_base.html" %}
 
 {% block content %}
-    <form action="" method="post" enctype="multipart/form-data">
+    <form class="parent" action="" method="post" enctype="multipart/form-data">
+        <div>
+            <a style="text-align:center;" class="custom-file-label" href="/novel_profile/{{novel_id}}">Возвращение к новелле</a>
+        </div>
         {{form.hidden_tag()}}
-        {{form.name.label}}
-        {{form.name(type="text")}}
+        <h1>~Редактирование новеллы~</h1>
+        <div class="child">
+        {{form.name.label}}<br>
+        {{form.name(class="text_field", type="text")}}
         {% for error in form.name.errors%}
             {{error}}
         {% endfor %}
+        </div>
+        <div class="child">
         <label>Создатель: {{nusername}}</label>
+        </div>
+        <div class="child">
         {{form.genre.label}}
         {% for gen in form.genre %}
-            <div> {{gen()}} {{gen.label.text}}</div>
+            <div style="font-size:20px;"> {{gen(class="checkbox")}} {{gen.label.text}}</div>
         {% endfor %}
-        {{form.age_limit.label}}
+        </div>
+        <div class="child">
+        {{form.age_limit.label}}<br>
         {{form.age_limit()}}
-        {{form.desc.label}}
-        {{form.desc()}}
-
-        {{form.novel_arch.label}}
-        {{form.novel_arch(type="file", accept=".zip,.rar,.7z")}}
+        </div>
+        <div class="child">
+        {{form.desc.label}}<br>
+        {{form.desc(class="text_area")}}
+        </div>
+        <div class="child">
+        {{form.novel_arch.label(class="custom-file-label")}}
+        {{form.novel_arch(class="hidden-file", type="file", accept=".zip,.rar,.7z")}}
         {% for error in form.novel_arch.errors %}
         {{error}}
         {% endfor %}
-
-        {{form.novel_ava.label}}
-        {{form.novel_ava(type="file", accept=".jpg,.png,.jpeg")}}
+        </div>
+        <div class="child">
+        {{form.novel_ava.label(class="custom-file-label")}}
+        {{form.novel_ava(class="hidden-file", type="file", accept=".jpg,.png,.jpeg")}}
         {% for error in form.novel_ava.errors %}
         {{error}}
         {% endfor %}
-
-        {{form.novel_pics.label}}
-        {{form.novel_pics(multiple=True, accept="image/*,video/*")}}
+        </div>
+        <div class="child">
+        {{form.novel_pics.label(class="custom-file-label")}}
+        {{form.novel_pics(class="hidden-file", multiple=True, accept="image/*,video/*")}}
         {% for error in form.novel_pics.errors %}
         {{error}}
         {% endfor %}
-
-        <p>{{form.del_old_scr()}} {{form.del_old_scr.label}}</p>
-
-<!--        <input type="checkbox" name="del_old_scr">-->
-<!--        <label for="del_old_scr">Удалить старые скриншоты</label>-->
-
-        {{form.submit(type="submit")}}
+        </div>
+        <div class="child">
+        {{form.del_old_scr(class="checkbox")}} {{form.del_old_scr.label(style="font-size:20px")}}
+        </div>
+        <div class="child" style="text-align:right;">
+        {{form.submit(class="button", type="submit")}}
+        </div>
         {% if message%}
             {{message}}
         {% endif %}

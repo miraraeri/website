@@ -1,66 +1,71 @@
 {% extends "form_base.html"%}
 
 {% block content %}
-<form action="" method="post" enctype="multipart/form-data">
+<form class="parent" action="" method="post" enctype="multipart/form-data" style="text-align: center;">
     {{form.hidden_tag()}}
-    <h1>Регистрация</h1>
-    <p>
+    <div style="text-align: left;">
+        <a style="text-align:center;" class="custom-file-label" href="/login">Возвращение к авторизации</a>
+    </div>
+    <h1>~Регистрация~</h1>
+    <div class="child">
         {{form.username.label}}<br>
-        {{form.username(class="form-control", type="text")}}<br>
+        {{form.username(class="text_field", type="text", placeholder="Любое имя по-своему прекрасно")}}<br>
         {% for error in form.username.errors %}
-        <p class="alert alert-danger" role="alert">
+        <div>
             {{error}}
-        </p>
+        </div>
         {% endfor %}
-    </p>
-    <p>
-        <label>Дата рождения</label><br>
-        {{form.birth_date(class="form-control", type="date", value="2000-01-01", min="1900-01-01")}}<br>
+    </div>
+    <div class="child">
+        <label>Незабываемый день - ваш день рождения</label><br>
+        {{form.birth_date(class="text_field", type="date", value="2000-01-01", min="1900-01-01")}}<br>
         {% for error in form.birth_date.errors %}
-        <p class="alert alert-danger" role="alert">
+        <div>
             {{error}}
-        </p>
+        </div>
         {% endfor %}
-    </p>
-    <p>
+    </div>
+    <div class="child">
         {{form.email.label}}<br>
-        {{form.email(class="form-control", type="email")}}<br>
+        {{form.email(class="text_field", type="email", placeholder="loveusers@yandex.ru")}}<br>
         {% for error in form.email.errors %}
-        <p class="alert alert-danger" role="alert">
+        <div>
             {{error}}
-        </p>
+        </div>
         {% endfor %}
-    </p>
-    <p>
+    </div>
+    <div class="child">
         {{form.password.label}}<br>
-        {{form.password(class="form-control", type="password")}}<br>
+        {{form.password(class="text_field", type="password", placeholder="1234 - всё-таки не вариант")}}<br>
         {% for error in form.password.errors %}
-        <p class="alert alert-danger" role="alert">
+        <div>
             {{error}}
-        </p>
+        </div>
         {% endfor %}
-    </p>
-    <p>
+    </div>
+    <div class="child">
         {{form.password_again.label}}<br>
-        {{form.password_again(class="form-control", type="password")}}<br>
+        {{form.password_again(class="text_field", type="password", placeholder="Важен не вариант, а совпадение")}}<br>
         {% for error in form.password_again.errors %}
-        <p class="alert alert-danger" role="alert">
+        <div>
             {{error}}
-        </p>
+        </div>
         {% endfor %}
-    </p>
-    <p>
-        {{form.avatar.label}}<br>
-        {{form.avatar(type="file", accept=".png,.jpeg,.jpg")}}<br>
+    </div>
+    <div class="child">
+        {{form.avatar.label(class="custom-file-label")}}<br>
+        {{form.avatar(class="hidden-file", type="file", accept=".png,.jpeg,.jpg")}}<br>
         {% for error in form.avatar.errors %}
-        <p>
+        <div>
             {{error}}
-        </p>
+        </div>
         {% endfor %}
-    </p>
-    <p>{{form.submit(type="submit", class="btn btn-primary")}}</p>
+    </div>
+    <div class="child">
+        {{form.submit(type="submit", class="button")}}
+    </div>
     {% if message %}
-        <p>{{message}}</p>
+        <div>{{message}}</div>
     {% endif %}
 </form>
 {% endblock %}

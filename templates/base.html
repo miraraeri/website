@@ -3,27 +3,52 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css') }}">
     <title>{{title}}</title>
 </head>
-<body>
+<body style="background-color: #A2DB9E;">
 <header>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="/main_page">Главное меню</a>
-        {% if user%}
-        <a href="/create_novel">[+]</a>
-        <a href="/profile"><img src="{{avatar}}" alt={{username}}></a>
-        {% else %}
-            <a href="/login">Войти</a>
+    <nav>
+        <div class="nav_left">
+        <a class="nav_link" href="/main_page">Мир приключений</a>
+        <form class="nav_search" action="" method="post">
+            {{search_form.hidden_tag()}}
+            {{search_form.simple_search(class="text_field", type="text", placeholder="Найти")}}
+            {{search_form.submit(class="nav_button")}}
+        </form>
+        </div>
+        <div class="nav_right">
+            {% if user%}
+            <a class="nav_icon" href="/create_novel">[+]</a>
+            <a href="/profile"><img class="logon_ava" src="{{avatar}}" alt={{username}}></a>
+            {% else %}
+                <a class="nav_link" href="/login">Войти</a>
         {% endif %}
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper(".mySwiper", {
+    loop: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+  });
+</script>
 </body>
 </html>

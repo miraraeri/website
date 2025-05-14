@@ -14,6 +14,7 @@ from forms.login import LoginForm
 from forms.create_novel import CreateNovel
 from forms.edit_novel import EditNovel
 from forms.edit_profile import EditUserForm
+from forms.simple_search import SimpleSearch
 import os
 
 
@@ -27,15 +28,16 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
-            return render_template('register.html', title='Регистрация',
-                                   form=form, message="Пароли не совпадают")
+            return render_template('register.html', title='Регистрация прекрасного пользователя',
+                                   form=form, message="Увы, но пароли должны совпадать")
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('register.html', title='Регистрация',
-                                   form=form, message="Такой пользователь уже есть")
+            return render_template('register.html', title='Регистрация прекрасного пользователя',
+                                   form=form, message="Ах, такой пользователь уже есть")
         f = request.files.get('avatar')
         if f.content_type not in ['image/jpeg', 'image/png']:
-            return render_template('register.html', title='Регистрация', form=form, message="Неверный формат")
+            return render_template('register.html', title='Регистрация прекрасного пользователя',
+                                   form=form)
         ava_path = os.path.join('static/user_avatars', f.filename)
         f.save(ava_path)
         user = User(
@@ -48,7 +50,7 @@ def register():
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
-    return render_template('register.html', title='Регистрация', form=form)
+    return render_template('register.html', title='Регистрация прекрасного пользователя', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -57,37 +59,56 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         if not db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('login.html', title='Авторизация', form=form,
-                                       message="Такого пользователя нет")
+            return render_template('login.html', title='Авторизация прекрасного пользователя',
+                                   form=form, message="Печально, но такого пользователя нет")
         else:
             user = db_sess.query(User).filter_by(email=form.email.data).first()
             if not user.check_password(form.password.data):
-                return render_template('login.html', title='Авторизация', form=form,
-                                       message="Неверный пароль")
+                return render_template('login.html', title='Авторизация прекрасного пользователя',
+                                       form=form, message="У вас был другой пароль")
         if form.remember_me:
             session.permanent = True
         else:
             session.permanent = False
         session['user_id'] = user.id
         return redirect('/main_page')
-    return render_template('login.html', title="Авторизация", form=form)
+    return render_template('login.html', title="Авторизация прекрасного пользователя", form=form)
+
+
+@app.context_processor
+def inject_search_form():
+    return dict(search_form=SimpleSearch())
+
+
+@app.before_request
+def handle_search():
+    form = SimpleSearch()
+    if form.validate_on_submit() and 'simple_search' in request.form:
+        query = form.simple_search.data
+        return redirect(url_for('main_page', q=query))
 
 
 @app.route('/')
 @app.route('/main_page')
 def main_page():
+    query = request.args.get('q')
     db_sess = db_session.create_session()
-    novels = db_sess.query(Novel)
+    if query:
+        novels = db_sess.query(Novel).filter(Novel.name.like(f'%{query}%') | (Novel.description.like(f'%{query}%')) |
+                                             (User.username.like(f'%{query}%'))).all()
+    else:
+        novels = db_sess.query(Novel)
+
     if 'user_id' in session:
         user = db_sess.query(User).filter_by(id=session['user_id']).first()
         if user is not None:
             clean_avatar = user.avatar.replace('\\', '/').replace('static', '')
             return render_template('main_page.html', title='Главная страница', user=user,
                                    username=user.username, avatar=url_for('static', filename=clean_avatar),
-                                   novels=novels)
+                                   novels=novels, query=query)
         else:
             session.pop('user_id', None)
-    return render_template('main_page.html', title='Главная страница', novels=novels)
+    return render_template('main_page.html', title='Главная страница', novels=novels, query=query)
 
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -98,7 +119,7 @@ def profile():
     user = db_sess.query(User).filter_by(id=session['user_id']).first()
     clean_avatar = user.avatar.replace('\\', '/').replace('static', '')
     param = {
-        'title': 'Профиль',
+        'title': 'Профиль прекрасного пользователя',
         'username': user.username,
         'birth_date': user.birth_date,
         'modified_date': user.modified_date,
@@ -136,7 +157,7 @@ def edit_profile():
         db_sess.commit()
         db_sess.refresh(user)
         return redirect('/profile')
-    return render_template('edit_profile.html', title='Редактирование', form=form)
+    return render_template('edit_profile.html', title='Редактирование лучшего профиля', form=form)
 
 
 @app.route('/del_profile', methods=['GET', 'POST'])
@@ -153,7 +174,7 @@ def del_profile():
             return redirect('/')
         else:
             return redirect('/login')
-    return render_template('del_profile.html', title='Удаление')
+    return render_template('del_profile.html', title='Удаление аккаунта прекрасного пользователя')
 
 
 @app.route('/create_novel', methods=['GET', 'POST'])
@@ -177,7 +198,7 @@ def create_novel():
 
         novel_ava = request.files['novel_avatar']
         if novel_ava.content_type not in ['image/jpeg', 'image/png']:
-            return render_template('create_novel.html', title='Создать новеллу', form=form,
+            return render_template('create_novel.html', title='Создать новую новеллу', form=form,
                                    genres=genres_list, age_limits=ages_list)
         novel_ava_path = os.path.join('static/novel_avatars', novel_ava.filename)
         novel_ava_path = novel_ava_path.replace('\\', '/')
@@ -186,7 +207,7 @@ def create_novel():
         pics_paths = []
         for pic in novel_pics:
             if pic.content_type not in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/x-msvideo', 'video/quicktime', 'video/x-matroska']:
-                return render_template('create_novel.html', title='Создать новеллу', form=form,
+                return render_template('create_novel.html', title='Создать новую новеллу', form=form,
                                        genres=genres_list, age_limits=ages_list)
             pic_path = os.path.join('static/novel_pics', pic.filename)
             pic_path = pic_path.replace('\\', '/')
@@ -203,8 +224,8 @@ def create_novel():
         db_sess.flush()
         if not request.form.getlist('genre'):
             db_sess.rollback()
-            return render_template('create_novel.html', title='Создать новеллу', form=form,
-                                   genres=genres_list, age_limits=ages_list, message='Добавьте жанры')
+            return render_template('create_novel.html', title='Создать новую новеллу', form=form,
+                                   genres=genres_list, age_limits=ages_list, message='Добавьте жанры, без них никуда')
 
         for genre in request.form.getlist('genre'):
             print(genre)
@@ -227,7 +248,7 @@ def create_novel():
             novel_pics[i].save(pics_paths[i])
         db_sess.commit()
         return redirect('/')
-    return render_template('create_novel.html', title='Создать новеллу', form=form,
+    return render_template('create_novel.html', title='Создать новую новеллу', form=form,
                            genres=genres_list, age_limits=ages_list)
 
 
@@ -236,7 +257,7 @@ def novel_profile(id_novel):
     db_sess = db_session.create_session()
     novel = db_sess.query(Novel).filter_by(id=id_novel).first()
     if novel is None:
-        return redirect('/')
+        return redirect('/error')
     novel_genres = db_sess.query(NovelGenre).filter_by(novel_id=id_novel).all()
     genres = [g.genre.name for g in novel_genres]
     novel_pics = db_sess.query(NovelsPics).filter_by(novel_id=id_novel).all()
@@ -288,6 +309,8 @@ def edit_novel(id_novel):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter_by(id=session['user_id']).first()
     novel = db_sess.query(Novel).filter_by(id=id_novel).first()
+    if novel is None:
+        return redirect('/error')
     if user.id != novel.user_id:
         return redirect('/')
     age_limit = db_sess.query(AgeLimit).all()
@@ -321,10 +344,10 @@ def edit_novel(id_novel):
             novel.novel_avatar = clean_ava_path
 
         novel_pics = form.novel_pics.data
-        if form.del_old_scr:
+        if form.del_old_scr.data:
             db_sess.query(NovelsPics).filter(NovelsPics.novel_id == id_novel).delete()
         for pic in novel_pics:
-            if pic.content_type in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/x-msvideo', 'video/quicktime', 'video/x-matroska']:
+            if pic and pic.content_type in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/x-msvideo', 'video/quicktime', 'video/x-matroska']:
                 pic_path = os.path.join('static/novel_pics', pic.filename)
                 pic_path = pic_path.replace('\\', '/')
                 pic.save(pic_path)
@@ -339,8 +362,8 @@ def edit_novel(id_novel):
             novel.novels_genres.append(NovelGenre(novel_id=id_novel, genre_id=genre_id))
         db_sess.commit()
         return redirect(f'/novel_profile/{id_novel}')
-    return render_template('edit_novel.html', title='Редактирование новеллы', form=form,
-                           user=user, username=user.username, nusername=novel.user.username)
+    return render_template('edit_novel.html', title='Редактирование лучшей новеллы', form=form,
+                           user=user, username=user.username, nusername=novel.user.username, novel_id=id_novel)
 
 
 @app.route('/del_novel/<int:id_novel>', methods=['GET', 'POST'])
@@ -350,6 +373,8 @@ def del_novel(id_novel):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter_by(id=session['user_id']).first()
     novel = db_sess.query(Novel).filter_by(id=id_novel).first()
+    if novel is None:
+        return redirect('/error')
     if user.id != novel.user_id:
         return redirect('/')
     if request.method == 'POST':
@@ -358,8 +383,13 @@ def del_novel(id_novel):
         db_sess.query(Novel).filter(Novel.id == id_novel).delete()
         db_sess.commit()
         return redirect('/')
-    return render_template('del_novel.html', user=user, username=user.username, novel_name=novel.name,
+    return render_template('del_novel.html', title="Удаление лучшей новеллы", user=user, username=user.username, novel_name=novel.name,
                            novel_id=novel.id)
+
+
+@app.route('/error')
+def error():
+    return render_template('error.html')
 
 
 def main():

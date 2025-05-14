@@ -1,36 +1,39 @@
 {% extends "form_base.html" %}
 
 {% block content %}
-    <form action="" method="post" enctype="multipart/form-data">
+    <form class="parent" action="" method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
-        <h1>Создать новеллу</h1>
-        <p>
-            {{ form.name.label }}
-            {{ form.name(type="text") }}
+        <div>
+            <a style="text-align:center;" class="custom-file-label" href="/">Возвращение в мир<br> приключений</a>
+        </div>
+        <h1>~Создать новую новеллу~</h1>
+        <div class="child">
+            {{ form.name.label }}<br>
+            {{ form.name(type="text", class="text_field", placeholder="Баллада о прекрасных пользователях") }}
             {% for error in form.name.errors%}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            <label>Дата создания</label>
-            {{ form.creation_date(type="date") }}
+        </div>
+        <div class="child">
+            <label>Дата создания вашей новеллы</label><br>
+            {{ form.creation_date(type="date", class="text_field") }}
             {% for error in form.creation_date.errors %}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            {{ form.genre.label }}
+        </div>
+        <div class="child">
+            {{ form.genre.label }}<br>
             {% for gen in genres%}
-                <input type="checkbox" name="genre" value={{gen}}>
-                <label for={{gen}}>{{gen}}</label>
+                <input class="checkbox" type="checkbox" name="genre" value={{gen}}>
+                <label style="font-size:20px;" for={{gen}}>{{gen}}</label><br>
             {% endfor %}
 
             {% for error in form.genre.errors %}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            {{ form.age_limit.label }}
+        </div>
+        <div class="child">
+            {{ form.age_limit.label }}<br>
             <select name="age_limit">
                 {% for al in age_limits %}
                     <option>{{al}}</option>>
@@ -39,38 +42,38 @@
             {% for error in form.age_limit.errors%}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            {{ form.desc.label }}
-            {{ form.desc }}
+        </div>
+        <div class="child">
+            {{ form.desc.label }}<br>
+            {{ form.desc(class="text_area", placeholder="И писали они свои произведения поздними ночами...") }}
             {% for error in form.desc.errors %}
                 {{errors}}
             {% endfor %}
-        </p>
-        <p>
-            {{form.novel_arch.label}}
-            {{form.novel_arch(type="file", accept=".zip,.rar,.7z")}}
+        </div>
+        <div class="child">
+            {{form.novel_arch.label(class="custom-file-label")}}<br>
+            {{form.novel_arch(class="hidden-file", type="file", accept=".zip,.rar,.7z")}}
             {% for error in form.novel_arch.errors%}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            {{form.novel_avatar.label}}
-            {{form.novel_avatar(type="file", accept=".jpg,.png,.jpeg")}}
+        </div>
+        <div class="child">
+            {{form.novel_avatar.label(class="custom-file-label")}}<br>
+            {{form.novel_avatar(class="hidden-file", type="file", accept=".jpg,.png,.jpeg")}}
             {% for error in form.novel_avatar.errors %}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            {{form.novel_pics.label}}
-            {{form.novel_pics(multiple=True, accept="image/*,video/*")}}
+        </div>
+        <div class="child">
+            {{form.novel_pics.label(class="custom-file-label")}}<br>
+            {{form.novel_pics(class="hidden-file", multiple=True, accept="image/*,video/*")}}
             {% for error in form.novel_pics.errors %}
                 {{error}}
             {% endfor %}
-        </p>
-        <p>
-            {{form.submit(type="submit", value='Создать')}}
-        </p>
+        </div>
+        <div class="child" style="text-align:right;">
+            {{form.submit(class="button", type="submit", value='Создать')}}
+        </div>
         {% if message %}
             {{message}}
         {% endif %}
